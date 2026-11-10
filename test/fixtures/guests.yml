@@ -1,0 +1,9 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  keycard_token: MyString
+  check_in_status: false
+
+two:
+  keycard_token: MyString
+  check_in_status: false

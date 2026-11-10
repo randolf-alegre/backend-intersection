@@ -1,0 +1,21 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  name: MyString
+  establishment_category: one
+  short: MyString
+  long: MyString
+  maps: MyString
+  string: MyString
+  cover_image: MyString
+  tags: MyString
+
+two:
+  name: MyString
+  establishment_category: two
+  short: MyString
+  long: MyString
+  maps: MyString
+  string: MyString
+  cover_image: MyString
+  tags: MyString
