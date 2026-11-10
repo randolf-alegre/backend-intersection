@@ -756,4 +756,4 @@ guest = Guest.find_or_initialize_by(keycard_token: "SL-GUEST-001")
 guest.update!(check_in_status: true)
 
 user = User.find_or_initialize_by(email: "admin@g.com")
-user.update!(password: "asdf1234", admin: true)
+user.update!(password: "asdf12345", admin: true)
