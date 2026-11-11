@@ -1,7 +1,7 @@
 class PropertiesController < ApplicationController
-    before_action :set_property, only: [:update, :destroy]
+    before_action :set_property, only: [ :update, :destroy ]
     before_action :property_params, only: :create
-    before_action :require_admin, only: [:create, :update, :destroy]
+    before_action :require_admin, only: [ :create, :update, :destroy, :associate_neighborhoods ]
 
     def index
         render json: paginated(Property.all)
@@ -9,6 +9,13 @@ class PropertiesController < ApplicationController
 
     def create
         property = Property.create(property_params)
+        render json: property
+    end
+
+    def associate_neighborhoods
+        property = Property.find(params[:property])
+        neighborhoods = Neighborhood.where(id: params[:neighborhood_ids]).where.not(id: property.neighborhood_ids)
+        property.neighborhoods << neighborhoods
         render json: property
     end
 
@@ -40,5 +47,9 @@ class PropertiesController < ApplicationController
 
     def set_property
         @property = Property.find(params[:id])
+    end
+
+    def associate_neighborhood_params
+        params.require(:property).permit(neighborhood_ids: [])
     end
 end

@@ -1,6 +1,6 @@
 class EstablishmentCategoriesController < ApplicationController
     before_action :require_admin
-    before_action :set_establishment_category, only: [:update, :destroy]
+    before_action :set_establishment_category, only: [ :update, :destroy ]
 
     def index
         render json: EstablishmentCategory.all, status: :ok

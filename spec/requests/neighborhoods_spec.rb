@@ -1,6 +1,32 @@
 require "rails_helper"
 
 RSpec.describe "Neighborhoods", type: :request do
+  describe "GET /api/neighborhoods/all" do
+    it "requires a token" do
+      get "/api/neighborhoods/all"
+
+      expect(response).to have_http_status(:unauthorized)
+      expect(json_response["error"]).to eq("Unauthorized")
+    end
+
+    it "forbids a guest" do
+      get "/api/neighborhoods/all", headers: authorization_header(create_guest)
+
+      expect(response).to have_http_status(:forbidden)
+      expect(json_response["error"]).to eq("Forbidden")
+    end
+
+    it "lists every neighborhood for an admin" do
+      first_neighborhood = Neighborhood.create!(neighborhood_attributes(name: "Makati"))
+      second_neighborhood = Neighborhood.create!(neighborhood_attributes(name: "BGC"))
+
+      get "/api/neighborhoods/all", headers: authorization_header(create_admin)
+
+      expect(response).to have_http_status(:ok)
+      expect(json_response.map { |row| row["id"] }).to contain_exactly(first_neighborhood.id, second_neighborhood.id)
+    end
+  end
+
   describe "GET /api/properties/:property_id/neighborhoods" do
     it "lists neighborhoods for a guest" do
       property = create_property

@@ -56,4 +56,4 @@ gem "jwt", "~> 3.3"
 
 gem "bcrypt", "~> 3.1"
 
-gem "dockerfile-rails", ">= 1.7", :group => :development
+gem "dockerfile-rails", ">= 1.7", group: :development
