@@ -8,7 +8,7 @@ class CreateProperties < ActiveRecord::Migration[8.1]
     end
   end
 
-  def def down 
+  def down
     drop_table :properties
   end
 end

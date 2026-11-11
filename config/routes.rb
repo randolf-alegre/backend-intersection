@@ -10,13 +10,26 @@ Rails.application.routes.draw do
   scope path: "/api" do
     post "login", to: "authentication#login"
     post "refresh", to: "authentication#refresh"
-    resources :establishment_categories, only: [:index, :create, :update, :destroy]
-    resources :properties, only: [:index, :create, :update, :destroy] do
+    resources :establishment_categories, only: [ :index, :create, :update, :destroy ]
+    resources :neighborhoods, only: [ :create, :update, :destroy ] do
+      collection do
+        get :all
+        post "associate_properties", to: "neighborhoods#associate_properties"
+        post "associate_establishments", to: "neighborhoods#associate_establishments"
+      end
+    end
+    resources :establishments, only: [ :create, :update, :destroy ] do
+      collection do
+        get :all
+      end
+    end
+    resources :properties, only: [ :index, :create, :update, :destroy ] do
       collection do
         get "search", to: "properties#search"
+        post "associate_neighborhoods", to: "properties#associate_neighborhoods"
       end
-      resources :neighborhoods, only: [:index, :create, :update, :destroy] do
-        resources :establishments, only: [:index, :create, :update, :destroy]
+      resources :neighborhoods, only: [ :index ] do
+        resources :establishments, only: [ :index ]
       end
     end
   end

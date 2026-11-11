@@ -1,5 +1,5 @@
 class AuthenticationController < ApplicationController
-  skip_before_action :authenticate_request, only: [:login, :refresh]
+  skip_before_action :authenticate_request, only: [ :login, :refresh ]
   before_action :require_login_params, only: :login
   before_action :require_refresh_params, only: :refresh
 
@@ -10,10 +10,14 @@ class AuthenticationController < ApplicationController
       user = User.find_by(email: login_params[:email])
       user&.authenticate(login_params[:password])
     end
-  
+
     return render json: { error: "Unauthorized" }, status: :unauthorized unless actor
-  
-    render json: {
+
+    render json: actor.is_a?(User) && actor.admin ? {
+      token: JWTAuthentication.generate_token(actor),
+      refresh_token: actor.generate_token_for(:refresh),
+      admin: true
+    } : {
       token: JWTAuthentication.generate_token(actor),
       refresh_token: actor.generate_token_for(:refresh)
     }
