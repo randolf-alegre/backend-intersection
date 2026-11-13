@@ -731,6 +731,67 @@ more_establishments.each do |attrs|
   attrs[:neighborhoods] = picked
 end
 
+COVER_PHOTOS = {
+  "Cafes" => %w[
+    1495474472287-4d71bcdd2085
+    1501339847302-ac426a4a7cbb
+    1445116572660-236099ec97a0
+    1497935586351-b67a49e012bf
+  ],
+  "Restaurants" => %w[
+    1414235077428-338989a2e8c0
+    1517248135467-4c7edcad34c4
+    1559339352-11d035aa65de
+    1476224203421-9ac39bcb3327
+  ],
+  "Shopping" => %w[
+    1441986300917-64674bd600d8
+    1472851294608-062f824d29cc
+    1528698827591-e19ccd7bc23d
+    1483985988355-763728e1935b
+  ],
+  "Galleries" => %w[
+    1536924940846-227afb31e2a5
+    1513364776144-60967b0f800f
+    1577720643272-265f09367456
+    1577083552431-6e5fd01aa342
+  ],
+  "Culture" => %w[
+    1524995997946-a1c2e315a42f
+    1507842217343-583bb7270b66
+    1460661419201-fd4cecdf8a8b
+    1481627834876-b7833e8f5570
+  ],
+  "Craft" => %w[
+    1452860606245-08befc0ff44b
+    1459908676235-d5f02a50184b
+  ],
+  "Baths" => %w[
+    1540555700478-4be289fbecef
+    1507652313519-d4e9174996dd
+    1544161515-4ab6ce6db874
+    1571902943202-507ec2618e8f
+  ],
+  "Studios" => %w[
+    1518611012118-696072aa579a
+    1545205597-3d9d02c29597
+    1571019614242-c5c5dee9f50b
+    1518310383802-640c2de311b2
+  ],
+  "Clinics" => %w[
+    1519494026892-80bbd2d6fd0d
+    1576091160399-112ba8d25d1d
+    1582719471384-894fbb16e074
+    1538108149393-fbbd81895907
+  ]
+}.freeze
+
+def cover_image_for(tag, slug)
+  photos = COVER_PHOTOS.fetch(tag)
+  photo = photos[slug.bytes.sum % photos.size]
+  "https://images.unsplash.com/photo-#{photo}?auto=format&fit=crop&w=1200&h=800&q=80"
+end
+
 (establishments + more_establishments).each do |attrs|
   category = EstablishmentCategory.find_by!(name: attrs[:category])
   neighborhoods = Neighborhood.where(name: attrs[:neighborhoods]).to_a
@@ -746,7 +807,7 @@ end
     long: attrs[:long],
     tags: attrs[:tags],
     maps: "https://www.google.com/maps/search/?api=1&query=#{URI.encode_www_form_component("#{attrs[:name]} #{area} Tokyo")}",
-    cover_image: "https://picsum.photos/seed/#{attrs[:slug]}/1200/800",
+    cover_image: cover_image_for(attrs[:tags], attrs[:slug]),
     establishment_category: category
   )
   establishment.neighborhoods = neighborhoods
